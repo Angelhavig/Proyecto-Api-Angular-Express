@@ -1,0 +1,51 @@
+
+CREATE TABLE usuario (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    sexo ENUM('Masculino', 'Femenino', 'Otro') NOT NULL
+);
+
+CREATE TABLE empresa (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    direccion VARCHAR(200) NOT NULL,
+    telefono VARCHAR(15) NOT NULL,
+    mision VARCHAR(255), -- Cambiado de TEXT a VARCHAR
+    vision VARCHAR(255), -- Cambiado de TEXT a VARCHAR
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+    CONSTRAINT UC_Empresa UNIQUE (usuario_id)
+);
+
+CREATE TABLE blog (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    titulo VARCHAR(100) NOT NULL,
+    descripcion VARCHAR(255), -- Cambiado de TEXT a VARCHAR
+    fecha_creacion DATE NOT NULL,
+    likes INT,
+    dislike INT,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+);
+
+CREATE TABLE comentarios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_blog INT NOT NULL,
+    contenido VARCHAR(255), -- Cambiado de TEXT a VARCHAR
+    fecha DATE NOT NULL,
+    `like` INT,
+    `dislike` INT,
+    FOREIGN KEY (id_blog) REFERENCES blog(id)
+);
+
+CREATE TABLE opinion (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_empresa INT NOT NULL,
+    id_usuario INT NOT NULL,
+    calificacion INT NOT NULL CHECK (calificacion >= 0 AND calificacion <= 10),
+    FOREIGN KEY (id_empresa) REFERENCES empresa(id),
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+);
